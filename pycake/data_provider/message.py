@@ -69,20 +69,13 @@ def get_cake_msg(what, cache_data_path=None, expected=None, argument=None):
     return rel_msg.get(lang, rel_msg.get("en", f"[Message '{what}' not found]"))
 
 
-def cake_abort(err, **kwargs):
-    message = get_cake_msg(err, **kwargs)
-    print(message)
-
-
-def cake_abort_class(expected, arg):
-    cake_abort("abort_class", expected=expected, argument=arg)
-
-
 def cake_alert(msg, **kwargs):
     message = get_cake_msg(msg, **kwargs)
-    print(f"[ALERT] {message}")
+    print(f"\U0001F514 {message}")
+    # print(f"[ALERT] {message}")
 
 
 def cake_alert_info(msg, **kwargs):
     message = get_cake_msg(msg, **kwargs)
-    print(f"[INFO] {message}")
+    print(f"\u2139\ufe0f {message}")
+    # print(f"[INFO] {message}")

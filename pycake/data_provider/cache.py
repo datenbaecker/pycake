@@ -1,4 +1,6 @@
 import os
+import sys
+import time
 import pickle
 import appdirs
 from pathlib import Path
@@ -81,16 +83,22 @@ class FileCache(InMemoryCache):
 def ask_cache_data():
     cake_alert_info("info_cache_data")
     cake_alert("cache_data")
+    sys.stdout.flush()
+    time.sleep(0.1)
     while True:
         answer = input().strip().lower()
         if answer in ["j", "y", "n"]:
             break
         cake_alert("cache_data")
+        sys.stdout.flush()
+        time.sleep(0.1)
     return {"j": True, "y": True, "n": False}[answer]
 
 
 def ask_delete_cache(cache_dir):
     cake_alert("delete_cache_data", cache_data_path=cache_dir)
+    sys.stdout.flush()
+    time.sleep(0.1)
     while True:
         answer = input().strip().lower()
         if answer in ["j", "y", "n"]:

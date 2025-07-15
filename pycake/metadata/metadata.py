@@ -1,9 +1,19 @@
 import pandas as pd
-from pycake.data_provider import default_data_provider, serve, extract_parquet_response, get_lang, get_cake_msg
+from rich.rule import Rule
+from rich.text import Text
+from pycake.data_provider import (
+    default_data_provider,
+    serve,
+    extract_parquet_response,
+    get_lang,
+    get_cake_msg,
+    console,
+    cli_colors
+)
 
 
 def metadata(x, data_provider=default_data_provider(), lang=get_lang(), include_description=True):
-    """Get metadata for an object
+    """Get metadata for an object.
 
     Examples
     --------
@@ -16,8 +26,7 @@ def metadata(x, data_provider=default_data_provider(), lang=get_lang(), include_
     x : pandas.DataFrame
         Object you want to get metadata for
     data_provider : object, optional
-        An object of type `DataProvider`, If None, a default data
-        provider is used
+        An object of type `RemoteDataProvider` (see :class:`Datenbaecker`)
     lang : str
         Language for the metadata, default is `en`
     include_description : bool
@@ -26,9 +35,10 @@ def metadata(x, data_provider=default_data_provider(), lang=get_lang(), include_
     Returns
     -------
     None
-        An invisible DataFrame with the metadata
+        An invisible DataFrame with the metadata.
 
     """
+
     what = x["endpoint"].iloc[0]
     if what is None:
         raise ValueError(get_cake_msg("no_endpoint"))
@@ -45,9 +55,8 @@ def metadata(x, data_provider=default_data_provider(), lang=get_lang(), include_
 
     all_sources = sorted(mdt[source_col].unique())
     for src in all_sources:
-        print("=" * 50)
-        print(src)
-        print("=" * 50)
+        heading = Text(src, style=cli_colors["col_red"])
+        console.print(Rule(heading, style="black"))
 
         curr_cols = mdt[mdt[source_col] == src].sort_values("name")
         for _, row in curr_cols.iterrows():

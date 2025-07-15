@@ -28,8 +28,8 @@ def get_address_features(addresses=None, data_provider=default_data_provider()):
         Either a list with address strings to search for or `None` for
         a standard address sample
     data_provider : object, optional
-        An object of type `DataProvider`, If None, a default data
-        provider is used
+        An object of type `RemoteDataProvider`. If `None`, a default
+        data provider is used
 
     Returns
     -------

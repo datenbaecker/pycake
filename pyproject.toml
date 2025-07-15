@@ -6,7 +6,7 @@ dependencies=[
     "pandas==2.3.0",
     "pyarrow==20.0.0",
     "requests==2.32.4",
-    "tqdm==2.2.3"
+    "rich==14.0.0"
 ]
 authors = [
   { name="Lukas Huwiler", email="lukas.huwiler@datenbaecker.ch" },

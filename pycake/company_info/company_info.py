@@ -21,8 +21,8 @@ def search_companies(companies, data_provider=default_data_provider()):
     companies : list of str
         List of company names to search for
     data_provider : object, optional
-        An object of type `DataProvider`, If None, a default data
-        provider is used
+        An object of type `RemoteDataProvider`. If `None`, a default
+        data provider is used
 
     Returns
     -------

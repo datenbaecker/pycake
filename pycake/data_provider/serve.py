@@ -1,16 +1,16 @@
 import os
 import time
 import requests
-from tqdm import tqdm
 from .utils import download_cake
 from .message import get_cake_msg
+from .theme import cake_progress_bar
 
 
 def serve(what, dp, read_body_hook=lambda x: x, alert_download=True, metadata_endpoint=None, **kwargs):
     """Get Data from a Data Provider. Depending on the type of
     `DataProvider` and the settings, `serve` might return cached data
     from memory or disk. If the data does not exist locally, a
-    `remote_data_provider` might download the data from the internet and
+    `RemoteDataProvider` might download the data from the internet and
     saves is to the cache folder on the disk depending on the settings
     (see :class:`Datenbaecker`).
 
@@ -19,7 +19,7 @@ def serve(what, dp, read_body_hook=lambda x: x, alert_download=True, metadata_en
     what : str
         Name of the data source
     dp : object
-        An object of type DataProvider (see :class:`Datenbaecker`)
+        An object of type `RemoteDataProvider` (see :class:`Datenbaecker`)
     read_body_hook : callable, optional
         A function to process the response body, defaults to identity function
     metadata_endpoint : str, optional
@@ -30,7 +30,7 @@ def serve(what, dp, read_body_hook=lambda x: x, alert_download=True, metadata_en
     Returns
     -------
     pandas.DataFrame
-        The requested data
+        The requested data.
     """
 
     what = f"{dp.api_version_prefix}{what}"
@@ -54,7 +54,7 @@ def serve(what, dp, read_body_hook=lambda x: x, alert_download=True, metadata_en
 def order_and_serve(what, body_json, dp, read_body_hook=lambda x: x, metadata_endpoint=None, timeout=60):
     """Get Data from a Data Provider. Depending on the type of `DataProvider`
     and the settings, `serve` might return cached data from memory or disk.
-    If the data does not exist locally, a `remote_data_provider` might download
+    If the data does not exist locally, a `RemoteDataProvider` might download
     the data from the internet and saves is to the cache folder on the disk
     depending on the settings (see :class:`Datenbaecker`).
 
@@ -65,13 +65,13 @@ def order_and_serve(what, body_json, dp, read_body_hook=lambda x: x, metadata_en
     body_json : dict
         The JSON body containing the request parameters.
     dp : object
-        An object of type DataProvider (see :class:`Datenbaecker`)
+        An object of type `RemoteDataProvider` (see :class:`Datenbaecker`)
     read_body_hook : callable, optional
-        A function to process the response body. Defaults to identity function.
+         A function to process the response body, defaults to identity function
     metadata_endpoint : str, optional
-        An optional metadata endpoint to tag the results with.
+        The endpoint metadata to tag the results with
     timeout : int
-        Timeout in seconds for the request. Defaults to 60 seconds.
+        Timeout in seconds for the request, defaults to 60 seconds
 
     Returns
     -------
@@ -95,14 +95,14 @@ def order_and_serve(what, body_json, dp, read_body_hook=lambda x: x, metadata_en
 
     res_ready = False
     ctr = 0
-    pbar = tqdm(total=prog_steps, desc="Processing request", unit="step")
+    update_progress = cake_progress_bar(prog_steps, style="cake")
     try:
         while not res_ready:
             time.sleep(0.5)
             if time.time() - start_time > timeout:
                 raise TimeoutError(get_cake_msg("timeout"))
             if ctr < prog_steps:
-                pbar.update(1)
+                update_progress(ctr + 1)
             if ctr % 2 == 0:
                 task_url = os.path.join(url, post_res["taskId"])
                 task_res = requests.get(task_url)
@@ -111,7 +111,8 @@ def order_and_serve(what, body_json, dp, read_body_hook=lambda x: x, metadata_en
                 res_ready = task_status["status"] == "completed"
             ctr += 1
     finally:
-        pbar.close()
+        update_progress(prog_steps)
+        print()
 
     res_urls = task_status["result"]["url"]
     if isinstance(res_urls, str):

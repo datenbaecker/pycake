@@ -8,7 +8,7 @@ def get_cantonal_entities(dp=default_data_provider()):
     Parameters
     ----------
     dp : object, optional
-        An object of type DataProvider (see :class::class:`Datenbaecker`).
+        An object of type `RemoteDataProvider` (see :class:`Datenbaecker`)
 
     Returns
     -------
@@ -33,7 +33,7 @@ def get_plz_entities(dp=default_data_provider()):
     Parameters
     ----------
     dp : object, optional
-        An object of type DataProvider (see :class:`Datenbaecker`).
+        An object of type `RemoteDataProvider` (see :class:`Datenbaecker`)
 
     Returns
     -------
@@ -59,7 +59,7 @@ def get_communal_entities(dp=default_data_provider()):
     Parameters
     ----------
     dp : object, optional
-        An object of type DataProvider (see :class:`Datenbaecker`).
+        An object of type `RemoteDataProvider` (see :class:`Datenbaecker`)
 
     Returns
     -------

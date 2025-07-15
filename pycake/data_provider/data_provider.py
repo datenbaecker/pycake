@@ -1,7 +1,6 @@
 import os
-import io
 import requests
-import pandas as pd
+from .theme import print_logo
 from .cache import FileCache, InMemoryCache, exists_default_cache, get_default_cache, create_default_cache, ask_cache_data
 
 
@@ -13,11 +12,6 @@ class LocalDataProvider:
     ----------
     cache_dir: str
         The directory path for caching data
-
-    Methods
-    -------
-    _get_file_cache()
-        Creates a file cache with the provided directory.
     """
 
     def __init__(self, cache_dir):
@@ -49,7 +43,7 @@ class RemoteDataProvider:
     host : str
         The base URL for the remote data provider
     cache_dir : str or None, optional
-        The directory path for caching data, or None if caching is not used
+        The directory path for caching data, or `None` if caching is not used
     auth_info : object or None, optional
         Authentication information for the remote server (currently unused)
     api_version_prefix : str, optional
@@ -63,7 +57,7 @@ class RemoteDataProvider:
         host : str
             The base URL for the remote data provider
         cache_dir : str or None, optional
-            The directory path for caching data, or None if caching is not used
+            The directory path for caching data, or `None` if caching is not used
         auth_info : object or None, optional
             Authentication information for the remote server (currently unused)
         api_version_prefix : str, optional
@@ -110,8 +104,8 @@ class Datenbaecker(RemoteDataProvider):
     """
     A class to manage the Datenbaecker data provider.
 
-    This class inherits from RemoteDataProvider and extends with getting
-    the news endpoint.
+    This class inherits from RemoteDataProvider and is specifically
+    designed to interact with the Datenbaecker API.
     """
 
     def __init__(self, cache_dir=None, auth_info=None):
@@ -122,18 +116,24 @@ class Datenbaecker(RemoteDataProvider):
             auth_info=auth_info,
             api_version_prefix="v1/"
         )
+        self._get_logo()
         self._get_news()
+
+    def _get_logo(self):
+        """ Prints the Datenbaecker logo."""
+        if connection_counter() == 1:
+            print_logo()
 
     def _get_news(self):
         """
         Connects to the Datenbaecker news endpoint and prints the news content.
         """
 
-        url = f"{self.host}/{self.api_version_prefix}news"
+        url = os.path.join(self.host, self.api_version_prefix + "news")
         res = requests.get(url)
         res.raise_for_status()
-        news = pd.read_json(io.BytesIO(res.content))
-        if news is not None:
+        news = res.json()
+        if news != [""]:
             print(f"\n{news}")
 
 
@@ -153,3 +153,16 @@ def create_default_data_provider():
 
 
 default_data_provider = create_default_data_provider()
+
+
+def create_counter(init=0):
+    val = init
+
+    def counter(inc=1):
+        nonlocal val
+        val += inc
+        return val
+    return counter
+
+
+connection_counter = create_counter()
