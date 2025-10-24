@@ -2,11 +2,11 @@
 name = "pycake"
 version = "0.0.1.0"
 dependencies=[
-    "numpy==2.3.0",
-    "pandas==2.3.0",
-    "pyarrow==20.0.0",
-    "requests==2.32.4",
-    "rich==14.0.0"
+    "numpy>=2.0.2",
+    "pandas>=2.3.0",
+    "pyarrow>=20.0.0",
+    "requests>=2.0.4",
+    "rich>=14.0.0"
 ]
 authors = [
   { name="Lukas Huwiler", email="lukas.huwiler@datenbaecker.ch" },
