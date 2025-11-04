@@ -60,7 +60,7 @@ def metadata(x, data_provider=default_data_provider(), lang=get_lang(), include_
 
         curr_cols = mdt[mdt[source_col] == src].sort_values("name")
         for _, row in curr_cols.iterrows():
-            print(f"- {row['name']}")
+            print(f"\u2022 {row['name']}")
             if include_description:
                 col_desc = row[[lang, "en", "de", "fr", "it"]].dropna().tolist()
                 if col_desc:
