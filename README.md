@@ -33,7 +33,7 @@ metadata(adr_data)
 ```bash
 from pycake import search_companies, metadata
 
-company_info = search_companies("Datenbeacker GmbH")
+company_info = search_companies("Datenbäcker GmbH")
 company_details = company_info["company_details"]
 related_companies = company_info["related_companies"]
 company_person = company_info["company_person"]
