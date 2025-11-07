@@ -1,8 +1,9 @@
+from typing import Union
 from datetime import date
 from pycake.data_provider import default_data_provider, order_and_serve, extract_parquet_response
 
 
-def search_companies(companies, data_provider=default_data_provider()):
+def search_companies(companies: Union[str, list[str]], data_provider=default_data_provider()):
     """Search for Swiss companies by name.
 
     Notes
@@ -34,7 +35,8 @@ def search_companies(companies, data_provider=default_data_provider()):
         search companies
         - `company_person`: A table with persons related to the search companies
     """
-
+    if isinstance(companies, str):
+        companies = [companies]
     req_body = [{"company_name": company, "date": str(date.today())} for company in companies]
 
     data = order_and_serve(

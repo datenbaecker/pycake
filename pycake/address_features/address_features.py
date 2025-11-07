@@ -1,8 +1,9 @@
+from typing import Union, Optional
 from datetime import date
 from pycake.data_provider import default_data_provider, serve, order_and_serve, extract_parquet_response
 
 
-def get_address_features(addresses=None, data_provider=default_data_provider()):
+def get_address_features(addresses: Optional[Union[str, list[str]]] = None, data_provider=default_data_provider()):
     """Get analytical base table for Swiss addresses.
 
     Notes
@@ -45,6 +46,8 @@ def get_address_features(addresses=None, data_provider=default_data_provider()):
             metadata_endpoint="address-features"
         )
     else:
+        if isinstance(addresses, str):
+            addresses = [addresses]
         req_body = [{"full_address": addr, "date": str(date.today())} for addr in addresses]
         data = order_and_serve(
             "address-features",

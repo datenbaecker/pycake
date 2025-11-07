@@ -42,6 +42,8 @@ def metadata(x, data_provider=default_data_provider(), lang=get_lang(), include_
     what = x["endpoint"].iloc[0]
     if what is None:
         raise ValueError(get_cake_msg("no_endpoint"))
+    if what != "address-features":
+        raise ValueError(get_cake_msg("no_metadata"))
     try:
         mdt = serve(f"{what}/metadata", data_provider, read_body_hook=extract_parquet_response)
     except Exception as e:
